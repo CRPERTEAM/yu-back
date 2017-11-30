@@ -18,7 +18,7 @@ let curRoutes = [
     meta: { hidden: true, title: '首页' }
   }, {
     path: '/404',
-    component: resolve => require(['pages/errPages/404.vue'], resolve),
+    component: resolve => require(['pages/error-pages/404.vue'], resolve),
     meta: { hidden: true }
   }
 ]
@@ -29,9 +29,9 @@ const router = new Router({
 
 let afterRoutes = [
   {
-    path: '/contentManage',
+    path: '/content-manage',
     component: Index,
-    redirect: '/contentManage/articles',
+    redirect: '/content-manage/articles',
     name: 'ContentManage',
     meta: { isMenu: true, title: '内容管理', iconCls: 'el-icon-menu' },
     children: [
@@ -51,22 +51,37 @@ let afterRoutes = [
       //   component: resolve => require(['pages/contentManage/articles.vue'], resolve),
       //   meta: { isMenu: true, title: '文章列表' }
       // }, {
-        path: '/contentManage/files',
-        name: 'CMFiles',
-        component: resolve => require(['pages/contentManage/files.vue'], resolve),
-        meta: { isMenu: true, title: '文件管理' }
+      //   path: '/content-manage/files',
+      //   name: 'CMFiles',
+      //   component: resolve => require(['pages/content-manage/files.vue'], resolve),
+      //   meta: { isMenu: true, title: '文件管理' }
+      // }, {
+        path: '/content-manage/goods',
+        name: 'Goods',
+        component: resolve => require(['pages/content-manage/goods'], resolve),
+        meta: { isMenu: true, title: '商品列表' }
+      }, {
+        path: '/content-manage/goods-type',
+        name: 'GoodsType',
+        component: resolve => require(['pages/content-manage/goods-type'], resolve),
+        meta: { isMenu: true, title: '商品类型列表' }
+      }, {
+        path: '/content-manage/order',
+        name: 'Order',
+        component: resolve => require(['pages/content-manage/order'], resolve),
+        meta: { isMenu: true, title: '订单列表' }
       }
     ]
   }, {
-    path: '/systemManage',
-    redirect: '/systemManage/userinfo',
+    path: '/system-manage',
+    redirect: '/system-manage/userinfo',
     name: 'SystemManage',
     component: Index,
     meta: { isMenu: true, title: '系统管理', iconCls: 'el-icon-setting' },
     children: [{
-      path: '/systemManage/userinfo',
+      path: '/system-manage/userinfo',
       name: 'SMUserinfo',
-      component: resolve => require(['pages/systemManage/userinfo.vue'], resolve),
+      component: resolve => require(['pages/system-manage/userinfo.vue'], resolve),
       meta: { isMenu: true, title: '用户信息' }
     }]
   }, {

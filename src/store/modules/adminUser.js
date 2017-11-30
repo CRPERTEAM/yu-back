@@ -1,6 +1,7 @@
 import { adminLogin } from '@/api'
 
 // import cookies from '@/utils/cookies'
+import { storage, USER_TOKEN } from '@/utils/storage'
 
 const state = () => ({
   loginForm: {
@@ -20,6 +21,7 @@ const getters = {
 const mutations = {
   SET_TOKEN: (state, token) => {
     // token应该在登录成功以后被设置，这里只是模拟一下
+    storage.set(USER_TOKEN, '12345')
     if (token) {
       // cookies.setToken(token)
     } else {

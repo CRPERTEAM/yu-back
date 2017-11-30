@@ -1,19 +1,20 @@
 <template lang="html">
   <div class="l-table-container">
     <el-table
-      :data="tableList"
+      :data="list"
       border
       tooltip-effect="dark"
       :style="style"
       ref="table"
-      class="table">
+      class="table"
+      v-if="list.length > 0">
       <el-table-column
         type="selection"
         width="50"
         v-if="hasSelection">
       </el-table-column>
       <el-table-column
-        v-for="item in tableFields"
+        v-for="item in fields"
         :key="item.prop"
         :prop="item.prop"
         :label="item.label"
@@ -53,13 +54,13 @@
       :pageSize="10"
       layout="total, sizes, prev, pager, next, jumper"
       :total="tableTotal"
-      class="pagination">
+      class="pagination"
+      v-if="tableTotal > 0">
     </el-pagination>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import { mapGetters } from 'vuex'
 export default {
   name: 'LTable',
   props: {
@@ -67,7 +68,6 @@ export default {
     name: {
       type: String
     },
-    // 如果从外部传入fields和list则不调用接口
     fields: {
       type: Array,
       default: () => []
@@ -75,6 +75,10 @@ export default {
     list: {
       type: Array,
       default: () => []
+    },
+    tableTotal: {
+      type: Number,
+      defualt: 0
     },
     hasSelection: {
       type: Boolean,
@@ -103,21 +107,14 @@ export default {
   },
   data () {
     return {
-      lList: this.list,
-      lFields: this.fields,
+      _list: this.list,
+      _fields: this.fields,
       currentPage: 1,
       pageSize: 10,
-      style: '',
-      styleWidth: ''
+      style: ''
     }
   },
   computed: {
-    ...mapGetters([
-      'tableResize',
-      'tableList',
-      'tableFields',
-      'tableTotal'
-    ]),
     operateCellWidth: function () {
       let op = this.operateType
       let ops = this.operateTypes
@@ -136,21 +133,7 @@ export default {
       return cnt * 75
     }
   },
-  async created () {
-    if ((!this.fields || this.fields.length === 0) ||
-      (!this.list || this.list.length === 0)) {
-      await this.$store.dispatch('getTableList', { type: this.name })
-
-      let keys = []
-      if (this.tableList.length > 0) {
-        keys = Object.keys(this.tableList[0])
-      }
-      this.$store.dispatch('getTableFields', keys)
-    } else {
-      this.tableFields = this.fields
-      this.tableList = this.list
-    }
-    this.styleWidth = this.$refs.table.bodyWidth
+  created () {
   },
   methods: {
     handleSizeChange (val) {
@@ -167,17 +150,6 @@ export default {
     }
   },
   watch: {
-    // table 由小变大时将会撑开父类，导致父类展示不全，通过折衷的办法修改style来保证
-    'tableResize' (newVal) {
-      if (!newVal) {
-        this.style = 'width: ' + this.styleWidth + ';transition: 0.3s width ease-in-out;'
-        setTimeout(() => {
-          this.style = ''
-        }, 500)
-      } else {
-        this.styleWidth = this.$refs.table.bodyWidth
-      }
-    }
   }
 }
 </script>

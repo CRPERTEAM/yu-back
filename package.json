@@ -5,13 +5,14 @@
   "author": "lyh2668@163.com",
   "private": true,
   "scripts": {
-    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
-    "start": "npm run dev",
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+    "start": "cross-env NODE_ENV=development npm run dev",
     "lint": "eslint --ext .js,.vue src",
     "build": "node build/build.js"
   },
   "dependencies": {
     "axios": "^0.17.1",
+    "cross-env": "^5.1.1",
     "element-ui": "^2.0.4",
     "qs": "^6.5.1",
     "tinymce": "^4.7.2",

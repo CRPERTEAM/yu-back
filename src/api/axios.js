@@ -3,6 +3,8 @@ import qs from 'qs'
 import config from '../config'
 import { Message } from 'element-ui'
 
+console.log(config)
+
 let instance = axios.create({
   baseURL: config.baseUrl,
   timeout: config.timeout

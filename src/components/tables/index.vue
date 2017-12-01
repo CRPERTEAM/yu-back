@@ -25,7 +25,8 @@
       <el-table-column
         label="操作"
         fixed="right"
-        :width="operateCellWidth">
+        :width="operateCellWidth"
+        v-if="operateType != -1 || operateTypes.length > 0">
         <template slot-scope="scope">
           <div class="operate-cell">
             <el-button
@@ -82,12 +83,12 @@ export default {
     },
     hasSelection: {
       type: Boolean,
-      default: true
+      default: false
     },
     // operateType 删除 001 编辑 010 查看 100
     operateType: {
       type: Number,
-      default: 0
+      default: -1
     },
     operateTypes: {
       type: Array,
@@ -123,13 +124,13 @@ export default {
       if (op === 0) {
         cnt = ops.length
       } else {
-        let cnt = 0
         while (op) {
           cnt = op & 1 ? ++cnt : cnt
           op = op >> 1
           // console.log(`op: ${op}, cnt: ${cnt}`)
         }
       }
+      console.log(cnt * 75)
       return cnt * 75
     }
   },
@@ -143,7 +144,23 @@ export default {
       console.log(`当前页: ${val}`)
     },
     handleOperate (type, index, row) {
-      this.$emit('handleOperate', type, this.tableList[index])
+      // 删除操作添加提示
+      if (type === 'delete') {
+        this.$confirm('此操作将删除该项，是否继续？', '警告', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$emit('handleOperate', type, this.list[index])
+        }).catch(() => {
+          this.$message({
+            type: 'success',
+            message: '已取消删除'
+          })
+        })
+      } else {
+        this.$emit('handleOperate', type, this.list[index])
+      }
     },
     validTypes: function (type) {
       return this.operateTypes.indexOf(type) > -1

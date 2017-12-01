@@ -21,6 +21,7 @@ export default {
   },
   watch: {
     '$route': function () {
+      console.log(this.$route)
       this.routesMatched = this.$route.matched
     }
   }

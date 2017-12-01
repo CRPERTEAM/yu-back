@@ -10,6 +10,9 @@ export const getGoodsList = (params) => axios.get('/goods', params)
 
 export const getGoods = (params) => axios.get(`/goods/${params._id}`)
 
+export const getGoodsTypeList = (params) => axios.get('/goodsType', params)
+
+export const getGoodsType = (params) => axios.get(`/goodsType/${params._id}`)
 // export default {
 //   getArticles: (params) => {
 //     // return api.jsonRequest('article', params, 'get')

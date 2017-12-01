@@ -7,11 +7,18 @@ const fields = [
     label: '编号',
     noShow: true
   }, {
+    prop: '_id',
+    label: '编号'
+  }, {
     prop: 'title',
     label: '标题',
     type: 'input'
   }, {
     prop: 'description',
+    label: '描述',
+    type: 'textarea'
+  }, {
+    prop: 'desc',
     label: '描述',
     type: 'textarea'
   }, {
@@ -50,7 +57,7 @@ const fields = [
   }
 ]
 
-let createFields = function (keys) {
+export const createFields = function (keys) {
   let arr = []
   for (let i in fields) {
     for (let j in keys) {
@@ -61,8 +68,4 @@ let createFields = function (keys) {
     }
   }
   return arr
-}
-
-export default {
-  createFields
 }

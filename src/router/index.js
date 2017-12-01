@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import store from '../store'
 import Index from 'pages/index.vue'
+import Goods from './goods'
 
 Vue.use(Router)
 
@@ -35,6 +36,7 @@ let afterRoutes = [
     name: 'ContentManage',
     meta: { isMenu: true, title: '内容管理', iconCls: 'el-icon-menu' },
     children: [
+      ...Goods,
       {
       //   path: '/contentManage/detail',
       //   name: 'CMDetail',
@@ -56,11 +58,6 @@ let afterRoutes = [
       //   component: resolve => require(['pages/content-manage/files.vue'], resolve),
       //   meta: { isMenu: true, title: '文件管理' }
       // }, {
-        path: '/content-manage/goods',
-        name: 'Goods',
-        component: resolve => require(['pages/content-manage/goods'], resolve),
-        meta: { isMenu: true, title: '商品列表' }
-      }, {
         path: '/content-manage/goods-type',
         name: 'GoodsType',
         component: resolve => require(['pages/content-manage/goods-type'], resolve),

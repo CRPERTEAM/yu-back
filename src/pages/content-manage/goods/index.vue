@@ -1,15 +1,19 @@
 <template>
   <div class="goods-container">
     <div class="top-content">
-      <el-button type="primary">添加商品</el-button>
+      <el-button type="primary" @click="toAddGoods">添加商品</el-button>
     </div>
     <div class="main-content">
-      <l-table></l-table>
+      <l-table :fields="fields"
+               :list="list"
+               :operate-type="7"
+               @handleOperate="handleOperate"></l-table>
     </div>
   </div>
 </template>
 
 <script>
+import { createFields } from '@/utils/fields'
 import { getGoodsList } from '@/api'
 import LTable from 'components/tables'
 export default {
@@ -19,15 +23,39 @@ export default {
   data () {
     return {
       list: [],
-      fields: []
+      fields: createFields(['title', 'desc'])
     }
   },
   created () {
-
+    this.getList()
   },
   methods: {
     async getList () {
-      await getGoodsList()
+      try {
+        let res = await getGoodsList()
+        this.list = res.data
+        console.log(res)
+      } catch (err) {
+        throw err
+      }
+    },
+    async getNextList () {
+      try {
+        // let res = await getGoodsList()
+      } catch (err) {
+        throw err
+      }
+    },
+    handleOperate (type, item) {
+      let name = {
+        'edit': 'GoodsEdit',
+        'view': 'GoodsDetail'
+      }
+      this.$router.push({ name: name[type] })
+      console.log(type, item)
+    },
+    toAddGoods () {
+      this.$router.push({ name: 'GoodsAdd' })
     }
   }
 }
@@ -37,6 +65,9 @@ export default {
 .goods-container {
   .top-content {
 
+  }
+  .main-content {
+    margin-top: 20px;
   }
 }
 </style>

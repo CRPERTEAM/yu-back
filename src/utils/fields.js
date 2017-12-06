@@ -22,6 +22,11 @@ const fields = [
     label: '描述',
     type: 'textarea'
   }, {
+    prop: 'price',
+    label: '价格',
+    width: '100',
+    type: 'input'
+  }, {
     prop: 'category',
     label: '类别',
     type: 'select'

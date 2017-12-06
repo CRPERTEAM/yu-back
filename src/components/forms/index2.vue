@@ -2,38 +2,38 @@
   <div class="l-forms">
     <el-form ref="form" :rules="rules" :model="formDatas" label-width="80px" class="form">
       <el-form-item
-        v-for="field of fields"
-        :key="field"
-        :label="datas.get(field).label"
-        :prop="field"
+        v-for="item in fields"
+        :key="item.prop"
+        :label="item.label"
+        :prop="item.prop"
         class="form-item">
         <el-input
-          v-model="formDatas[field]"
-          :placeholder="placeholder(datas.get(field).label)"
-          v-if="isType(datas.get(field).type, 'input')"></el-input>
+          v-model="formDatas[item.prop]"
+          :placeholder="placeholder(item.label)"
+          v-if="isType(item, 'input')"></el-input>
         <el-input
           type="textarea"
-          :row="datas.get(field).row || 2"
-          v-model="formDatas[field]"
-          :placeholder="placeholder(datas.get(field).label)"
-          v-if="isType(datas.get(field).type, 'textarea')"></el-input>
-        <!-- <el-select
-          v-model="formDatas[item.prop].value"
-          :placeholder="placeholder(datas[field].label)"
-          v-if="isType(datas[field], 'select')"></el-select>
+          :row="item.row || 2"
+          v-model="formDatas[item.prop]"
+          :placeholder="placeholder(item.label)"
+          v-if="isType(item, 'textarea')"></el-input>
+        <el-select
+          v-model="formDatas[item.prop]"
+          :placeholder="placeholder(item.label)"
+          v-if="isType(item, 'select')"></el-select>
         <el-switch
-          v-model="formDatas[item.prop].value"
+          v-model="formDatas[item.prop]"
           :on-text="item.onText || ''"
           :off-text="item.offText || ''"
           v-if="isType(item, 'switch')"
-        ></el-switch> -->
-        <!-- <el-upload
+        ></el-switch>
+        <el-upload
           class="upload-files"
           action="https://jsonplaceholder.typicode.com/posts/"
           :on-success="handleUploadFilesSuccess"
           :on-preview="handlePreview"
           :on-remove="handleRemove"
-          :file-list="formDatas[item.prop].value"
+          :file-list="formDatas[item.prop]"
           :drag="item.drag"
           v-if="isType(item, 'upload-files')">
           <el-button size="small" type="primary" v-if="!item.drag">点击上传</el-button>
@@ -51,7 +51,7 @@
           <i v-else class="el-icon-plus avatar-icon"></i>
         </el-upload>
         <l-tinymce
-          v-if="isType(item, 'richText')"></l-tinymce> -->
+          v-if="isType(item, 'richText')"></l-tinymce>
       </el-form-item>
     </el-form>
   </div>
@@ -71,8 +71,17 @@ export default {
       type: String,
       default: ''
     },
+    fields: {
+      type: Array,
+      default: () => []
+    },
     datas: {
-      type: Map // 接受一个Map对象
+      type: Object,
+      default: () => {}
+    },
+    rules: {
+      type: Object,
+      default: () => {}
     }
   },
   data () {
@@ -80,24 +89,18 @@ export default {
       rules: {},
       editor: null,
       uploadFiles: [],
-      formDatas: {},
-      // fields: getFields()
-      fields: ['title', 'desc']
+      formDatas: {}
     }
   },
   mounted () {
-    this.formDatas = this.toInitObject()
-    console.log('fields Symbol type: ', this.fields.length)
-    console.log('fields: ', this.fields)
-    console.log('formDatas: ', this.formDatas)
-    console.log(this.datas.get('title'))
+
   },
   created () {
-    // this.formDatas = this.datas
-    // this.rules = this.configRules(this.formDatas)
+    this.formDatas = this.datas
+    this.rules = this.configRules(this.formDatas)
 
     this.$nextTick(function () {
-      // this.$refs['form'].resetFields()
+      this.$refs['form'].resetFields()
     })
 
     console.log('forms: ', this.formDatas, this.fields)
@@ -106,24 +109,8 @@ export default {
 
   },
   methods: {
-    toInitObject () {
-      let obj = {}
-      for (let key of this.datas.keys()) {
-        obj[key] = ''
-      }
-      return obj
-    },
-    getFields () {
-      let arr = []
-      for (let key of this.datas.keys) {
-        arr.push(key)
-      }
-      console.log('getFields: ', arr)
-      return arr
-    },
-    isType: function (itemType, type) {
-      console.log('isType', itemType)
-      return itemType === type
+    isType: function (item, type) {
+      return item.type === type
     },
     configRules: function (datas) {
       let obj = {}

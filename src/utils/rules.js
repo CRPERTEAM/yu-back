@@ -1,6 +1,6 @@
 import validatorUtil from './valid'
 
-let checkRules = function (options, validCb, errMsg, trigger) {
+let checkRules = function (options, errMsg, trigger, validCb) {
   let rules = options
 
   if (validCb && typeof validCb === 'function') {
@@ -23,9 +23,9 @@ let checkRules = function (options, validCb, errMsg, trigger) {
 // 配置所有的rules规则
 const rules = {
   username: checkRules([{ required: true, message: '请输入用户名', trigger: 'blur' }],
-    validatorUtil.checkUsername, '请正确输入用户名，6-16位且首字母必须为字母！', 'change'),
+  '请正确输入用户名，6-16位且首字母必须为字母！', 'change', validatorUtil.checkUsername),
   password: checkRules([{ required: true, message: '请输入密码', trigger: 'blur' }],
-    validatorUtil.checkPwd, '请正确输入密码，6-12位且必须包含字母和数字!', 'change'),
+  '请正确输入密码，6-12位且必须包含字母和数字!', 'change', validatorUtil.checkPwd),
   title: checkRules([{ required: true, message: '请输入标题', trigger: 'blur' }]),
   description: checkRules([{ required: true, message: '请输入描述', trigger: 'blur' }]),
   category: checkRules([{ required: true, message: '请选择类别', trigger: 'blur' }])

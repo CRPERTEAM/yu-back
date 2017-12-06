@@ -23,7 +23,7 @@ export default {
   data () {
     return {
       list: [],
-      fields: createFields(['title', 'desc'])
+      fields: createFields(['title', 'desc', 'price'])
     }
   },
   created () {

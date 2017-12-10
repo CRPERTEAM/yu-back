@@ -1,10 +1,11 @@
 <template>
-  <div>
-    Goods detail.
+  <div class="goods-detail-container">
+    <l-form></l-form>
   </div>
 </template>
 
 <script>
+// import LForm from 'components/forms'
 export default {
 
 }

@@ -9,6 +9,8 @@
                :operate-type="7"
                @handleOperate="handleOperate"></l-table>
     </div>
+
+    <goods-dialog ref="goodsDialog" :type="type" :values="values"></goods-dialog>
   </div>
 </template>
 
@@ -16,14 +18,18 @@
 import { createFields } from '@/utils/fields'
 import { getGoodsList } from '@/api'
 import LTable from 'components/tables'
+import goodsDialog from 'components/dialogs/goods'
 export default {
   components: {
-    LTable
+    LTable,
+    goodsDialog
   },
   data () {
     return {
       list: [],
-      fields: createFields(['title', 'desc', 'price'])
+      fields: createFields(['title', 'desc', 'price']),
+      values: {},
+      type: 'add'
     }
   },
   created () {
@@ -47,15 +53,23 @@ export default {
       }
     },
     handleOperate (type, item) {
-      let name = {
-        'edit': 'GoodsEdit',
-        'view': 'GoodsDetail'
+      let obj = {
+        'edit': this.toEditGoods,
+        'view': null
       }
-      this.$router.push({ name: name[type] })
-      console.log(type, item)
+      console.log(item)
+      typeof obj[type] === 'function' && obj[type](type, item)
     },
     toAddGoods () {
-      this.$router.push({ name: 'GoodsAdd' })
+      // this.$router.push({ name: 'GoodsAdd' })
+      this.values = {}
+      this.type = 'add'
+      this.$refs.goodsDialog.show()
+    },
+    toEditGoods (type, item) {
+      this.values = item
+      this.type = type
+      this.$refs.goodsDialog.show()
     }
   }
 }

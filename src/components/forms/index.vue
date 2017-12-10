@@ -1,32 +1,42 @@
 <template lang="html">
   <div class="l-forms">
-    <el-form ref="form" :rules="rules" :model="formDatas" label-width="80px" class="form">
+    <el-form ref="form" :model="formDatas" label-width="80px" class="form">
       <el-form-item
-        v-for="field of fields"
+        v-for="field of fieldList"
         :key="field"
-        :label="datas.get(field).label"
+        :label="fields.get(field).label"
         :prop="field"
         class="form-item">
         <el-input
           v-model="formDatas[field]"
-          :placeholder="placeholder(datas.get(field).label)"
-          v-if="isType(datas.get(field).type, 'input')"></el-input>
+          :placeholder="placeholder(fields.get(field).label)"
+          clearable
+          :style="fields.get(field).style"
+          v-if="isType(fields.get(field).type, 'input')"></el-input>
         <el-input
           type="textarea"
-          :row="datas.get(field).row || 2"
+          :row="fields.get(field).row || 2"
           v-model="formDatas[field]"
-          :placeholder="placeholder(datas.get(field).label)"
-          v-if="isType(datas.get(field).type, 'textarea')"></el-input>
-        <!-- <el-select
-          v-model="formDatas[item.prop].value"
-          :placeholder="placeholder(datas[field].label)"
-          v-if="isType(datas[field], 'select')"></el-select>
+          :placeholder="placeholder(fields.get(field).label)"
+          v-if="isType(fields.get(field).type, 'textarea')"></el-input>
+        <el-select
+          v-model="formDatas[field]"
+          :placeholder="placeholder(fields.get(field).label)"
+          v-if="isType(fields.get(field).type, 'select')"
+          class="form-slelct">
+          <el-option
+            v-for="item in fields.get(field).options"
+            :key="item._id"
+            :label="item.label"
+            :value="item._id">
+          </el-option>
+        </el-select>
         <el-switch
-          v-model="formDatas[item.prop].value"
-          :on-text="item.onText || ''"
-          :off-text="item.offText || ''"
-          v-if="isType(item, 'switch')"
-        ></el-switch> -->
+          v-model="formDatas[field]"
+          :on-text="fields.get(field).onText || ''"
+          :off-text="fields.get(field).offText || ''"
+          v-if="isType(fields.get(field).type, 'switch')"
+        ></el-switch>
         <!-- <el-upload
           class="upload-files"
           action="https://jsonplaceholder.typicode.com/posts/"
@@ -71,8 +81,14 @@ export default {
       type: String,
       default: ''
     },
-    datas: {
+    fields: {
       type: Map // 接受一个Map对象
+    },
+    values: {
+      type: Object,
+      default: () => {
+        return {}
+      }
     }
   },
   data () {
@@ -80,49 +96,40 @@ export default {
       rules: {},
       editor: null,
       uploadFiles: [],
-      formDatas: {},
-      // fields: getFields()
-      fields: ['title', 'desc']
+      fieldList: this.getFieldList(),
+      formDatas: this.initModel()
     }
   },
+  watch: {
+  },
   mounted () {
-    this.formDatas = this.toInitObject()
-    console.log('fields Symbol type: ', this.fields.length)
-    console.log('fields: ', this.fields)
-    console.log('formDatas: ', this.formDatas)
-    console.log(this.datas.get('title'))
+    console.log('this.fieldList: ', this.fieldList)
+    console.log('this.fields: ', this.fields)
   },
   created () {
-    // this.formDatas = this.datas
-    // this.rules = this.configRules(this.formDatas)
-
-    this.$nextTick(function () {
-      // this.$refs['form'].resetFields()
-    })
-
-    console.log('forms: ', this.formDatas, this.fields)
+    console.log('this.fieldList: ', this.fieldsArr)
   },
   destroyed () {
 
   },
   methods: {
-    toInitObject () {
+    initModel () {
       let obj = {}
-      for (let key of this.datas.keys()) {
-        obj[key] = ''
+      // 为了防止内部修改引起外部的同步修改，不能直接使用values作为v-model的绑定值
+      for (let key of this.fields.keys()) {
+        console.log('this.values', this.values)
+        obj[key] = this.values[key] || ''
       }
       return obj
     },
-    getFields () {
+    getFieldList () {
       let arr = []
-      for (let key of this.datas.keys) {
+      for (let key of this.fields.keys()) {
         arr.push(key)
       }
-      console.log('getFields: ', arr)
       return arr
     },
     isType: function (itemType, type) {
-      console.log('isType', itemType)
       return itemType === type
     },
     configRules: function (datas) {
@@ -199,6 +206,9 @@ export default {
           text-align: center;
         }
       }
+    }
+    .form-slelct {
+      width: 200px;
     }
   }
 }

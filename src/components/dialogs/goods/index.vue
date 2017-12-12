@@ -11,7 +11,7 @@
 <script>
 import LForm from 'components/forms'
 import { getFields } from '@/utils/goods-fields'
-import { getGoodsTypeList } from '@/api'
+import { getGoodsTypeList, addGoods, updateGoods } from '@/api'
 export default {
   components: {
     LForm
@@ -42,15 +42,21 @@ export default {
       fields: getFields(['title', 'desc', 'typeId', 'price']),
       visible: false,
       formVisible: false,
-      titleAdd: {
-        'edit': '编辑',
-        'add': '添加'
+      typeAssociationObj: {
+        edit: {
+          title: '编辑',
+          method: updateGoods
+        },
+        add: {
+          title: '添加',
+          method: addGoods
+        }
       }
     }
   },
   computed: {
     fullTitle () {
-      return this.title + this.titleAdd[this.type]
+      return this.title + this.typeAssociationObj[this.type].title
     }
   },
   watch: {
@@ -85,7 +91,19 @@ export default {
     cancel () {
       this.visible = false
     },
-    commit () {
+    async commit () {
+      let data = this.$refs.form.getFormDatas()
+      console.log('commit: ', data)
+      try {
+        if (this.type !== 'add') {
+          data._id = this.values._id
+        }
+        let res = await this.typeAssociationObj[this.type].method(data)
+        this.$emit('success', res.data)
+        this.visible = false
+      } catch (err) {
+        throw err
+      }
       // 根据type类型进行提交操作
     }
   }

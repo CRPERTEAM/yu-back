@@ -129,6 +129,9 @@ export default {
       }
       return arr
     },
+    getFormDatas () {
+      return this.formDatas
+    },
     isType: function (itemType, type) {
       return itemType === type
     },

@@ -1,160 +1,17 @@
 import axios from './axios'
 
 export const adminLogin = (params) => axios.post('/admin/login', params)
-
 export const adminLogout = (params) => axios.post('/admin/logout', params)
-
 export const adminRegister = (params) => axios.post('/admin/register', params)
 
 export const getGoodsList = (params) => axios.get('/goods', params)
-
 export const getGoods = (params) => axios.get(`/goods/${params._id}`)
+export const addGoods = (params) => axios.post('/goods', params)
+export const updateGoods = (params) => axios.patch('/goods', params)
+export const deleteGoods = (params) => axios.delete(`/goods/${params._id}`)
 
-export const getGoodsTypeList = (params) => axios.get('/goodsType', params)
-
-export const getGoodsType = (params) => axios.get(`/goodsType/${params._id}`)
-// export default {
-//   getArticles: (params) => {
-//     // return api.jsonRequest('article', params, 'get')
-//     let data = {
-//       total: 7,
-//       list: [
-//         {
-//           id: 1,
-//           title: '这是一个比较长的文章标题',
-//           description: '这是描述',
-//           updateTime: '2017-09-09',
-//           category: '国家',
-//           hits: '123'
-//         }, {
-//           id: 2,
-//           title: '这是文章标题',
-//           description: '这是描述',
-//           updateTime: '2017-09-09',
-//           category: '国家',
-//           hits: '234'
-//         }, {
-//           id: 3,
-//           title: '这是文章标题',
-//           description: '这是描述',
-//           updateTime: '2017-09-09',
-//           category: '国家',
-//           hits: '222'
-//         }, {
-//           id: 4,
-//           title: '这是文章标题',
-//           description: '这是描述',
-//           updateTime: '2017-09-09',
-//           category: '国家',
-//           hits: '3333'
-//         }, {
-//           id: 5,
-//           title: '这是文章标题',
-//           description: '这是描述',
-//           updateTime: '2017-09-09',
-//           category: '国家',
-//           hits: '432'
-//         }, {
-//           id: 6,
-//           title: '这是文章标题',
-//           description: '这是描述',
-//           updateTime: '2017-09-09',
-//           category: '国家',
-//           hits: '543'
-//         }, {
-//           id: 7,
-//           title: '这是文章标题',
-//           description: '这是描述',
-//           updateTime: '2017-09-09',
-//           category: '国家',
-//           hits: '555'
-//         }
-//       ]
-//     }
-//     return data
-//   },
-//   getArticleDetail: (params) => {
-//     return api.jsonRequest('article/detail', params, 'get')
-//   },
-//   getFormDatas: (params) => {
-//     return {
-//       datas: {
-//         title: '',
-//         description: '',
-//         category: '',
-//         important: '',
-//         content: '',
-//         avatar: {},
-//         pictures: [],
-//         attachment: []
-//       } }
-//   },
-//   // 获取表格的字段映射
-//   getFields: (params) => {
-//     // mock
-//     let arr = []
-//     switch (params.type) {
-//       case 'article': {
-//         arr = [
-//           {
-//             prop: 'title',
-//             label: '标题',
-//             isShow: true
-//           }, {
-//             prop: 'description',
-//             label: '描述',
-//             isShow: true
-//           }, {
-//             prop: 'updateTime',
-//             label: '更新时间',
-//             isShow: true
-//           }, {
-//             prop: 'category',
-//             label: '类别',
-//             isShow: true
-//           }, {
-//             prop: 'hits',
-//             label: '点击数',
-//             isShow: true
-//           }
-//         ]
-//         break
-//       }
-//       case 'articleDetail': {
-//         arr = [
-//           {
-//             prop: 'title',
-//             label: '标题',
-//             isShow: true,
-//             type: 'input'
-//           }, {
-//             prop: 'description',
-//             label: '描述',
-//             isShow: true,
-//             type: 'input'
-//           }, {
-//             prop: 'category',
-//             label: '类别',
-//             isShow: true,
-//             type: 'select'
-//           }, {
-//             prop: 'important',
-//             label: '重要性',
-//             isShow: true,
-//             type: 'switch'
-//           }, {
-//             prop: 'content',
-//             label: '正文',
-//             isShow: true,
-//             type: 'richText'
-//           }
-//         ]
-//         break
-//       }
-//       default: {
-//         arr = []
-//       }
-//     }
-//     return arr
-//   }
-// }
+export const getGoodsTypeList = (params) => axios.get('/goods-type', params)
+export const getGoodsType = (params) => axios.get(`/goods-type/${params._id}`)
+export const addGoodsType = (params) => axios.post('/goods-type', params)
+export const updateGoodsType = (params) => axios.patch('goods-type', params)
+export const deleteGoodsType = (params) => axios.delete(`/goods-type/${params._id}`)

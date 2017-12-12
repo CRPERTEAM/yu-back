@@ -10,13 +10,13 @@
                @handleOperate="handleOperate"></l-table>
     </div>
 
-    <goods-dialog ref="goodsDialog" :type="type" :values="values"></goods-dialog>
+    <goods-dialog ref="goodsDialog" :type="type" :values="values" @success="optSuccess"></goods-dialog>
   </div>
 </template>
 
 <script>
 import { createFields } from '@/utils/fields'
-import { getGoodsList } from '@/api'
+import { getGoodsList, deleteGoods } from '@/api'
 import LTable from 'components/tables'
 import goodsDialog from 'components/dialogs/goods'
 export default {
@@ -27,7 +27,14 @@ export default {
   data () {
     return {
       list: [],
-      fields: createFields(['title', 'desc', 'price']),
+      fields: [
+        ...createFields(['title', 'desc', 'price']),
+        {
+          prop: 'typeLabel',
+          label: '类型',
+          width: 100
+        }
+      ],
       values: {},
       type: 'add'
     }
@@ -55,10 +62,11 @@ export default {
     handleOperate (type, item) {
       let obj = {
         'edit': this.toEditGoods,
-        'view': null
+        'view': null,
+        'delete': this.toDeleteGoods
       }
       console.log(item)
-      typeof obj[type] === 'function' && obj[type](type, item)
+      typeof obj[type] === 'function' && obj[type](item)
     },
     toAddGoods () {
       // this.$router.push({ name: 'GoodsAdd' })
@@ -66,10 +74,22 @@ export default {
       this.type = 'add'
       this.$refs.goodsDialog.show()
     },
-    toEditGoods (type, item) {
+    toEditGoods (item) {
       this.values = item
-      this.type = type
+      this.type = 'edit'
       this.$refs.goodsDialog.show()
+    },
+    async toDeleteGoods (item) {
+      try {
+        await deleteGoods(item)
+        this.getList()
+      } catch (err) {
+        throw err
+      }
+    },
+    optSuccess () {
+      // 操作成功则重新读取List
+      this.getList()
     }
   }
 }

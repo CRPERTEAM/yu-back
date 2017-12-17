@@ -38,10 +38,10 @@ export default {
     return instance.get(url, { params: data })
   },
   post: async (url = '', data = {}) => {
-    return instance.post(url, qs.stringify(data))
+    return instance.post(url, qs.stringify(data, { indices: false }))
   },
   patch: async (url = '', data = {}) => {
-    return instance.patch(url, qs.stringify(data))
+    return instance.patch(url, qs.stringify(data, { indices: false }))
   },
   delete: async (url = '', data = {}) => {
     return instance.delete(url, { params: data })

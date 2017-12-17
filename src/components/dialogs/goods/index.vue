@@ -39,7 +39,7 @@ export default {
   data () {
     return {
       // 返回的是一个map，约束了一些常用字段
-      fields: getFields(['title', 'desc', 'typeId', 'price']),
+      fields: getFields(['title', 'desc', 'typeIds', 'price']),
       visible: false,
       formVisible: false,
       typeAssociationObj: {
@@ -75,12 +75,12 @@ export default {
     this.getTypes()
   },
   methods: {
-    // 给typeId添加options
+    // 给typeIds添加options
     async getTypes () {
       try {
         let res = await getGoodsTypeList()
         console.log(res)
-        this.fields.get('typeId').options = Object.assign({}, res.data)
+        this.fields.get('typeIds').options = Object.assign({}, res.data)
       } catch (err) {
         throw err
       }

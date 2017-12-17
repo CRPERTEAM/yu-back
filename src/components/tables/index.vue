@@ -137,6 +137,13 @@ export default {
   created () {
   },
   methods: {
+    showLabel (item) {
+      console.log('typeof item.label', typeof item.label)
+      if (typeof item.label === 'Array') {
+        console.log('typeof item.label', typeof item.label)
+      }
+      return item.label
+    },
     handleSizeChange (val) {
       console.log(`每页 ${val} 条`)
     },

@@ -10,9 +10,10 @@ const formFields = {
     type: 'textarea',
     rule: {}
   },
-  typeId: {
+  typeIds: {
     label: '类型',
     type: 'select',
+    multiple: true,
     rule: {},
     options: {}
   },

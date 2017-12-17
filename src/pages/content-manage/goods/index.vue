@@ -30,7 +30,7 @@ export default {
       fields: [
         ...createFields(['title', 'desc', 'price']),
         {
-          prop: 'typeLabel',
+          prop: 'typeLabels',
           label: '类型',
           width: 100
         }

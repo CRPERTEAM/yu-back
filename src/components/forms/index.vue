@@ -2,40 +2,41 @@
   <div class="l-forms">
     <el-form ref="form" :model="formDatas" label-width="80px" class="form">
       <el-form-item
-        v-for="field of fieldList"
-        :key="field"
-        :label="fields.get(field).label"
-        :prop="field"
+        v-for="(item, index) of getFieldsValues"
+        :key="index"
+        :label="item.label"
+        :prop="getFieldsKeys[index]"
         class="form-item">
         <el-input
-          v-model="formDatas[field]"
-          :placeholder="placeholder(fields.get(field).label)"
+          v-model="formDatas[getFieldsKeys[index]]"
+          :placeholder="placeholder(item.label)"
           clearable
-          :style="fields.get(field).style"
-          v-if="isType(fields.get(field).type, 'input')"></el-input>
+          :style="item.style"
+          v-if="isType(item.type, 'input')"></el-input>
         <el-input
           type="textarea"
-          :row="fields.get(field).row || 2"
-          v-model="formDatas[field]"
-          :placeholder="placeholder(fields.get(field).label)"
-          v-if="isType(fields.get(field).type, 'textarea')"></el-input>
+          :row="item.row || 2"
+          v-model="formDatas[getFieldsKeys[index]]"
+          :placeholder="placeholder(item.label)"
+          v-if="isType(item.type, 'textarea')"></el-input>
         <el-select
-          v-model="formDatas[field]"
-          :placeholder="placeholder(fields.get(field).label)"
-          v-if="isType(fields.get(field).type, 'select')"
-          class="form-slelct">
+          v-model="formDatas[getFieldsKeys[index]]"
+          :placeholder="placeholder(item.label)"
+          v-if="isType(item.type, 'select')"
+          class="form-slelct"
+          :multiple="item.multiple">
           <el-option
-            v-for="item in fields.get(field).options"
-            :key="item._id"
-            :label="item.label"
-            :value="item._id">
+            v-for="(optionItem, index) in item.options"
+            :key="optionItem._id"
+            :label="optionItem.label"
+            :value="optionItem._id">
           </el-option>
         </el-select>
         <el-switch
-          v-model="formDatas[field]"
-          :on-text="fields.get(field).onText || ''"
-          :off-text="fields.get(field).offText || ''"
-          v-if="isType(fields.get(field).type, 'switch')"
+          v-model="formDatas[getFieldsKeys[index]]"
+          :on-text="item.onText || ''"
+          :off-text="item.offText || ''"
+          v-if="isType(item.type, 'switch')"
         ></el-switch>
         <!-- <el-upload
           class="upload-files"
@@ -89,6 +90,14 @@ export default {
       default: () => {
         return {}
       }
+    }
+  },
+  computed: {
+    getFieldsKeys () {
+      return [...this.fields.keys()]
+    },
+    getFieldsValues () {
+      return [...this.fields.values()]
     }
   },
   data () {

@@ -26,7 +26,7 @@ export default {
       fields: [
         ...createFields(['_id']),
         {
-          prop: 'value',
+          prop: 'label',
           label: '类别'
         }
       ]

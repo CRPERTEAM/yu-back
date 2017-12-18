@@ -14,6 +14,13 @@
           :style="item.style"
           v-if="isType(item.type, 'input')"></el-input>
         <el-input
+          v-model.number="formDatas[getFieldsKeys[index]]"
+          :placeholder="placeholder(item.label)"
+          clearable
+          type="number"
+          :style="item.style"
+          v-if="isType(item.type, 'input-number')"></el-input>
+        <el-input
           type="textarea"
           :row="item.row || 2"
           v-model="formDatas[getFieldsKeys[index]]"

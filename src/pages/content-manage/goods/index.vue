@@ -31,8 +31,7 @@ export default {
         ...createFields(['title', 'desc', 'price']),
         {
           prop: 'typeLabels',
-          label: '类型',
-          width: 100
+          label: '类型'
         }
       ],
       values: {},
@@ -75,6 +74,7 @@ export default {
       this.$refs.goodsDialog.show()
     },
     toEditGoods (item) {
+      console.log(item)
       this.values = item
       this.type = 'edit'
       this.$refs.goodsDialog.show()

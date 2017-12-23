@@ -31,9 +31,11 @@
           :placeholder="placeholder(item.label)"
           v-if="isType(item.type, 'select')"
           class="form-slelct"
-          :multiple="item.multiple">
+          :multiple="item.multiple"
+          @focus="focusSelect(item, getFieldsKeys[index])"
+          :loading="!selectLoaded[getFieldsKeys[index]]">
           <el-option
-            v-for="(optionItem, index) in item.options"
+            v-for="(optionItem, index) in selectOptions[getFieldsKeys[index]]"
             :key="optionItem._id"
             :label="optionItem.label"
             :value="optionItem._id">
@@ -113,7 +115,9 @@ export default {
       editor: null,
       uploadFiles: [],
       fieldList: this.getFieldList(),
-      formDatas: this.initModel()
+      formDatas: this.initModel(),
+      selectLoaded: {},
+      selectOptions: {}
     }
   },
   watch: {
@@ -188,6 +192,28 @@ export default {
     },
     beforeUpload: function () {
 
+    },
+    // select focus的时候去请求options
+    focusSelect: async function (item, key) {
+      // 如果该key存在于这个selectOptions中，则表示不需要请求数据
+      if (key in this.selectOptions) {
+        return
+      }
+
+      // loading状态
+      this.selectLoaded[key] = false
+
+      let method = item && typeof item.method === 'function' && item.method
+
+      if (!method) return
+
+      try {
+        let res = await method()
+        this.$set(this.selectOptions, key, res.data)
+        this.$set(this.selectLoaded, key, true)
+      } catch (err) {
+        this.$set(this.selectLoaded, key, true)
+      }
     }
   }
 }

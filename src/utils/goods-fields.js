@@ -1,22 +1,4 @@
-// import { getGoodsTypeList } from 'api'
-
-// let typeIdsOptions = []
-// const getTypeIdsOptions = async () => {
-//   if (typeIdsOptions.length > 0) {
-//     return typeIdsOptions
-//   }
-
-//   try {
-//     let res = await getGoodsTypeList()
-//     console.log('getTypeIdsOptions: ', res)
-//     if (res.data && res.data.length > 0) {
-//       return res.data
-//     }
-//     return []
-//   } catch (err) {
-//     throw err
-//   }
-// }
+import { getGoodsTypeList } from 'api'
 
 const formFields = {
   title: {
@@ -34,7 +16,8 @@ const formFields = {
     type: 'select',
     multiple: true,
     rule: {},
-    options: {}
+    options: {},
+    method: getGoodsTypeList
   },
   price: {
     label: '价格',

@@ -16,7 +16,6 @@ const formFields = {
     type: 'select',
     multiple: true,
     rule: {},
-    options: {},
     method: getGoodsTypeList
   },
   price: {

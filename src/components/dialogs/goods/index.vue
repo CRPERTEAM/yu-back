@@ -72,7 +72,8 @@ export default {
     }
   },
   mounted () {
-    this.getTypes()
+    // this.getTypes()
+    this.getSelectOptions()
   },
   methods: {
     // 给typeIds添加options
@@ -84,6 +85,20 @@ export default {
       } catch (err) {
         throw err
       }
+    },
+    getSelectOptions (item, key) {
+      this.fields.forEach(async (value, key) => {
+        console.log('get value: ', value)
+        if (value.method && typeof value.method === 'function') {
+          try {
+            let res = await value.method()
+            this.fields.get(key).options = Object.assign({}, res.data)
+            console.log('getSelectOptions: ', this.fields)
+          } catch (err) {
+            throw err
+          }
+        }
+      })
     },
     show () {
       this.visible = true

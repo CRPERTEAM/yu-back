@@ -1,11 +1,12 @@
 <template>
   <el-dialog :title="fullTitle" :visible.sync="visible">
     <l-form ref="form" :fields="fields" :values="values" v-if="formVisible"></l-form>
+    <slot></slot>
     <el-button-group>
       <el-button type="primary" @click.native="commit">提交</el-button>
       <el-button @click.native="cancel">取消</el-button>
     </el-button-group>
-  </el-dialog></div>
+  </el-dialog>
 </template>
 
 <script>

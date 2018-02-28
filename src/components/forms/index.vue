@@ -32,7 +32,8 @@
           v-if="isType(item.type, 'select')"
           class="form-slelct"
           :multiple="item.multiple"
-          @focus="focusSelect(item, getFieldsKeys[index])"
+          :loading="!item.loaded"
+          @visible-change="selectVisible($event, item, getFieldsKeys[index])"
           @change="changeSelect">
           <el-option
             v-for="(optionItem, index) in item.options"
@@ -102,11 +103,11 @@ export default {
     }
   },
   computed: {
-    getFieldsKeys () {
-      return [...this.fields.keys()]
-    },
     getFieldsValues () {
       return [...this.fields.values()]
+    },
+    getFieldsKeys () {
+      return [...this.fields.keys()]
     }
   },
   data () {
@@ -114,7 +115,6 @@ export default {
       rules: {},
       editor: null,
       uploadFiles: [],
-      selectLoaded: {},
       selectOptions: {},
       fieldList: this.getFieldList(),
       formDatas: this.initModel()
@@ -194,28 +194,26 @@ export default {
 
     },
     // select focus的时候去请求options
-    focusSelect: async function (item, key) {
-    //   // 如果该key存在于这个selectOptions中，则表示不需要请求数据
-    //   if (!isEmptyObject(item.options)) {
-    //     this.$set(this.selectLoaded, key, true)
-    //     return
-    //   }
+    selectVisible: async function (visible, item, key) {
+      if (visible) this.getOptions(item, key)
+    },
+    getOptions: async function (item, key) {
+      // 如果该key存在于这个selectOptions中，则表示不需要请求数据
+      if (item.options && item.options.length > 0) {
+        return
+      }
 
-    //   // loading状态
-    //   this.selectLoaded[key] = false
+      let method = item && typeof item.method === 'function' && item.method
 
-    //   let method = item && typeof item.method === 'function' && item.method
+      if (!method) return
 
-    //   if (!method) return
-
-    //   try {
-    //     let res = await method()
-    //     // this.$set(item.options, key, res.data)
-    //     item.options = Object.assign({}, res.data)
-    //     this.$set(this.selectLoaded, key, true)
-    //   } catch (err) {
-    //     this.$set(this.selectLoaded, key, true)
-    //   }
+      try {
+        let res = await method()
+        item.options = res.data
+        item.loaded = true
+        console.log(this.getFieldsValues)
+        this.$forceUpdate()
+      } catch (err) {}
     },
     changeSelect: function (event) {
       console.log('changeSelect', event)

@@ -10,8 +10,6 @@
 
 <script>
 import LForm from 'components/forms'
-import { getFields } from '@/utils/goods-fields'
-import { getGoodsTypeList, addGoods, updateGoods } from '@/api'
 export default {
   components: {
     LForm
@@ -28,6 +26,9 @@ export default {
         return {}
       }
     },
+    fields: {
+      type: Map
+    },
     type: {
       type: String,
       default: 'add',
@@ -38,18 +39,14 @@ export default {
   },
   data () {
     return {
-      // 返回的是一个map，约束了一些常用字段
-      fields: getFields(['title', 'desc', 'typeIds', 'price']),
       visible: false,
       formVisible: false,
       typeAssociationObj: {
         edit: {
-          title: '编辑',
-          method: updateGoods
+          title: '编辑'
         },
         add: {
-          title: '添加',
-          method: addGoods
+          title: '添加'
         }
       }
     }
@@ -71,55 +68,20 @@ export default {
       }
     }
   },
-  mounted () {
-    // this.getTypes()
-    this.getSelectOptions()
-  },
   methods: {
-    // 给typeIds添加options
-    async getTypes () {
-      try {
-        let res = await getGoodsTypeList()
-        console.log(res)
-        this.fields.get('typeIds').options = Object.assign({}, res.data)
-      } catch (err) {
-        throw err
-      }
-    },
-    getSelectOptions (item, key) {
-      this.fields.forEach(async (value, key) => {
-        console.log('get value: ', value)
-        if (value.method && typeof value.method === 'function') {
-          try {
-            let res = await value.method()
-            this.fields.get(key).options = Object.assign({}, res.data)
-            console.log('getSelectOptions: ', this.fields)
-          } catch (err) {
-            throw err
-          }
-        }
-      })
-    },
     show () {
       this.visible = true
     },
-    cancel () {
+    hidden () {
       this.visible = false
+    },
+    cancel () {
+      this.hidden()
     },
     async commit () {
       let data = this.$refs.form.getFormDatas()
       console.log('commit: ', data)
-      try {
-        if (this.type !== 'add') {
-          data._id = this.values._id
-        }
-        let res = await this.typeAssociationObj[this.type].method(data)
-        this.$emit('success', res.data)
-        this.visible = false
-      } catch (err) {
-        throw err
-      }
-      // 根据type类型进行提交操作
+      this.$emit('commit', data)
     }
   }
 }

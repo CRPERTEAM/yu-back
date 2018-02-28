@@ -1,4 +1,4 @@
-import request from '../../api/requests.js'
+// import request from '../../api/requests.js'
 import fields from '@/utils/fields'
 
 const state = () => ({
@@ -31,11 +31,11 @@ const mutations = {
 }
 
 const actions = {
-  getTableList: async ({ commit }, params) => {
-    const data = await request.getArticles(params)
-    commit('SET_TABLE_LIST', data.list)
-    commit('SET_TABLE_TOTAL', data.total)
-  },
+  // getTableList: async ({ commit }, params) => {
+  //   const data = await request.getArticles(params)
+  //   commit('SET_TABLE_LIST', data.list)
+  //   commit('SET_TABLE_TOTAL', data.total)
+  // },
   getTableFields: ({ commit }, keys) => {
     let value = fields.createFields(keys)
     commit('SET_TABLE_FIELDS', value)

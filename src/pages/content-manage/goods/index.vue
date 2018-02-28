@@ -10,13 +10,14 @@
                @handleOperate="handleOperate"></l-table>
     </div>
 
-    <goods-dialog ref="goodsDialog" :type="type" :values="values" @success="optSuccess"></goods-dialog>
+    <goods-dialog ref="goodsDialog" :type="type" :values="values" :fields="dialogFields" @commit="commit" @success="optSuccess"></goods-dialog>
   </div>
 </template>
 
 <script>
 import { createFields } from '@/utils/fields'
-import { getGoodsList, deleteGoods } from '@/api'
+import { getGoodsList, deleteGoods, updateGoods, addGoods } from '@/api'
+import { getFields } from '@/utils/goods-fields'
 import LTable from 'components/tables'
 import goodsDialog from 'components/dialogs/goods'
 export default {
@@ -34,8 +35,12 @@ export default {
           label: '类型'
         }
       ],
+      dialogFields: getFields(['title', 'desc', 'typeIds', 'price']),
       values: {},
-      type: 'add'
+      type: 'add',
+      _id: 0,
+      addMethod: addGoods,
+      editMethod: updateGoods
     }
   },
   created () {
@@ -77,6 +82,7 @@ export default {
       console.log(item)
       this.values = item
       this.type = 'edit'
+      this._id = item._id
       this.$refs.goodsDialog.show()
     },
     async toDeleteGoods (item) {
@@ -86,6 +92,16 @@ export default {
       } catch (err) {
         throw err
       }
+    },
+    async commit (data) {
+      if (this.type === 'add') {
+        await this.addMethod(data)
+      } else if (this.type === 'edit') {
+        data._id = this._id
+        await this.editMethod(data)
+      }
+      this.$refs.goodsDialog.hidden()
+      this.getList()
     },
     optSuccess () {
       // 操作成功则重新读取List

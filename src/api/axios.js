@@ -1,5 +1,5 @@
 import axios from 'axios'
-import qs from 'qs'
+// import qs from 'qs'
 import config from '../config'
 import { Message } from 'element-ui'
 
@@ -7,7 +7,10 @@ console.log(config)
 
 let instance = axios.create({
   baseURL: config.baseUrl,
-  timeout: config.timeout
+  timeout: config.timeout,
+  headers: {
+    'Content-type': 'application/json'
+  }
 })
 
 instance.interceptors.request.use((conf) => {
@@ -38,10 +41,10 @@ export default {
     return instance.get(url, { params: data })
   },
   post: async (url = '', data = {}) => {
-    return instance.post(url, qs.stringify(data, { indices: false }))
+    return instance.post(url, data)
   },
   patch: async (url = '', data = {}) => {
-    return instance.patch(url, qs.stringify(data, { indices: false }))
+    return instance.patch(url, data)
   },
   delete: async (url = '', data = {}) => {
     return instance.delete(url, { params: data })

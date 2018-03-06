@@ -7,10 +7,16 @@
       <l-table :fields="fields"
                :list="list"
                :operate-type="7"
-               @handleOperate="handleOperate"></l-table>
+               @handleOperate="handleOperate">
+      </l-table>
     </div>
 
-    <goods-dialog ref="goodsDialog" :type="type" :values="values" :fields="dialogFields" @commit="commit" @success="optSuccess"></goods-dialog>
+    <opt-dialog ref="goodsDialog"
+      :type="type"
+      :values="values"
+      :fields="dialogFields"
+      @commit="commit">
+    </opt-dialog>
   </div>
 </template>
 
@@ -19,11 +25,11 @@ import { createFields } from '@/utils/fields'
 import { getGoodsList, deleteGoods, updateGoods, addGoods } from '@/api'
 import { getFields } from '@/utils/goods-fields'
 import LTable from 'components/tables'
-import goodsDialog from 'components/dialogs/goods'
+import optDialog from 'components/dialogs/opt'
 export default {
   components: {
     LTable,
-    goodsDialog
+    optDialog
   },
   data () {
     return {
@@ -31,11 +37,13 @@ export default {
       fields: [
         ...createFields(['title', 'desc', 'price']),
         {
-          prop: 'typeLabels',
-          label: '类型'
+          prop: 'types',
+          label: '类型',
+          width: '200',
+          slot: true
         }
       ],
-      dialogFields: getFields(['title', 'desc', 'typeIds', 'price']),
+      dialogFields: getFields(['title', 'desc', 'types', 'price']),
       values: {},
       type: 'add',
       _id: 0,
@@ -73,7 +81,6 @@ export default {
       typeof obj[type] === 'function' && obj[type](item)
     },
     toAddGoods () {
-      // this.$router.push({ name: 'GoodsAdd' })
       this.values = {}
       this.type = 'add'
       this.$refs.goodsDialog.show()
@@ -81,6 +88,8 @@ export default {
     toEditGoods (item) {
       console.log(item)
       this.values = item
+      // this.values.typeLabels = this.values.typeLabels.split(',')
+      console.log('toEdit: ', this.values)
       this.type = 'edit'
       this._id = item._id
       this.$refs.goodsDialog.show()
@@ -101,10 +110,6 @@ export default {
         await this.editMethod(data)
       }
       this.$refs.goodsDialog.hidden()
-      this.getList()
-    },
-    optSuccess () {
-      // 操作成功则重新读取List
       this.getList()
     }
   }

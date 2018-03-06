@@ -21,6 +21,14 @@
         :width="item.width || ''"
         v-if="!item.noShow"
         show-overflow-tooltip>
+        <template slot-scope="scope">
+          <div v-if="item.slot" class="tag-list">
+            <el-tag v-for="(slotItem, index) in scope.row[item.prop]" :key="index" class="tag">
+              {{ slotItem.label }}
+            </el-tag>
+          </div>
+          <div v-else>{{ scope.row[item.prop] }}</div>
+        </template>
       </el-table-column>
       <el-table-column
         label="操作"
@@ -176,6 +184,13 @@ export default {
   // position: absolute;
   max-width: 100%;
   .table {
+    .tag-list {
+    }
+    .tag {
+      &:not(:last-child) {
+        margin-right: 10px;
+      }
+    }
     .operate-cell {
       display: flex;
       justify-content: space-between;

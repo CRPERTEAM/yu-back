@@ -31,15 +31,17 @@
           :placeholder="placeholder(item.label)"
           v-if="isType(item.type, 'select')"
           class="form-slelct"
+          value-key="label"
+          filterable
           :multiple="item.multiple"
           :loading="!item.loaded"
           @visible-change="selectVisible($event, item, getFieldsKeys[index])"
           @change="changeSelect">
           <el-option
             v-for="(optionItem, index) in item.options"
-            :key="optionItem._id"
+            :key="optionItem.label"
             :label="optionItem.label"
-            :value="optionItem._id">
+            :value="optionItem">
           </el-option>
         </el-select>
         <el-switch
@@ -136,9 +138,12 @@ export default {
     initModel () {
       let obj = {}
       // 为了防止内部修改引起外部的同步修改，不能直接使用values作为v-model的绑定值
+      console.log('values: ', this.values)
       this.fields.forEach((value, key) => {
-        obj[key] = this.values[key] || ''
+        obj[key] = this.values[key] || undefined
+        this.getOptions(value, key)
       })
+      this.$forceUpdate()
       console.log('obj: ', obj)
       return obj
     },
@@ -209,14 +214,14 @@ export default {
 
       try {
         let res = await method()
+        // this.formData[item.optionProp] = res.data
         item.options = res.data
         item.loaded = true
-        console.log(this.getFieldsValues)
         this.$forceUpdate()
       } catch (err) {}
     },
     changeSelect: function (event) {
-      console.log('changeSelect', event)
+      console.log('changeSelect', this.formDatas)
     }
   }
 }

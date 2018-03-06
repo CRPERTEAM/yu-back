@@ -11,13 +11,22 @@ const formFields = {
     type: 'textarea',
     rule: {}
   },
+  types: {
+    label: '类型',
+    type: 'select',
+    multiple: true,
+    method: getGoodsTypeList
+  },
   typeIds: {
     label: '类型',
     type: 'select',
     multiple: true,
+    optionProp: 'typeLabels',
+    slot: true,
     rule: {},
     method: getGoodsTypeList
   },
+  typeLabels: {},
   price: {
     label: '价格',
     type: 'input-number',

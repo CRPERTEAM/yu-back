@@ -22,7 +22,7 @@
         v-if="!item.noShow"
         show-overflow-tooltip>
         <template slot-scope="scope">
-          <div v-if="item.slot" class="tag-list">
+          <div v-if="item.type === 'select'" class="tag-list">
             <el-tag v-for="(slotItem, index) in scope.row[item.prop]" :key="index" class="tag">
               {{ slotItem.label }}
             </el-tag>

@@ -1,7 +1,7 @@
 <template>
   <div class="goods-container">
     <div class="top-content">
-      <el-button type="primary" @click="toAddGoods">添加类型</el-button>
+      <el-button type="primary" @click="toAddGoodsType">添加类型</el-button>
     </div>
     <div class="main-content">
       <l-table :fields="fields"
@@ -9,27 +9,54 @@
                :operate-type="7"
                @handleOperate="handleOperate"></l-table>
     </div>
+
+    <l-opt-dialog ref="goodsTypeDialog"
+      :type="type"
+      :values="values"
+      :fields="dialogFields"
+      @commit="commit">
+    </l-opt-dialog>
   </div>
 </template>
 
 <script>
-import { createFields } from '@/utils/fields'
-import { getGoodsTypeList } from '@/api'
+import { getGoodsTypeList, addGoodsType, updateGoodsType, deleteGoodsType } from '@/api'
+import { obj2map } from '@/utils/common'
 import LTable from 'components/tables'
+import LOptDialog from 'components/dialogs/opt'
+
 export default {
   components: {
-    LTable
+    LTable,
+    LOptDialog
   },
   data () {
     return {
       list: [],
       fields: [
-        ...createFields(['_id']),
+        {
+          prop: '_id',
+          label: '编号'
+        },
         {
           prop: 'label',
           label: '类别'
         }
-      ]
+      ],
+      dialogFields: obj2map({
+        label: {
+          type: 'input',
+          label: '类型字面值'
+        },
+        value: {
+          type: 'input',
+          label: '类型值'
+        }
+      }),
+      values: {},
+      type: 'add',
+      addMethod: addGoodsType,
+      editMethod: updateGoodsType
     }
   },
   created () {
@@ -53,15 +80,36 @@ export default {
       }
     },
     handleOperate (type, item) {
-      let name = {
-        'edit': 'GoodsEdit',
-        'view': 'GoodsDetail'
+      const obj = {
+        'edit': this.toEditGoodsType,
+        'view': null,
+        'delete': this.deleteGoodsType
       }
-      this.$router.push({ name: name[type] })
-      console.log(type, item)
+      typeof obj[type] === 'function' && obj[type](item)
     },
-    toAddGoods () {
-      this.$router.push({ name: 'GoodsAdd' })
+    toAddGoodsType () {
+      this.value = {}
+      this.type = 'add'
+      this.$refs.goodsTypeDialog.show()
+    },
+    toEditGoodsType (item) {
+      this.values = item
+      this.type = 'edit'
+      this.$refs.goodsTypeDialog.show()
+    },
+    async toDeleteGoodsType (item) {
+      await deleteGoodsType(item)
+      this.getList()
+    },
+    async commit (data) {
+      if (this.type === 'add') {
+        await this.addMethod(data)
+      } else if (this.type === 'edit') {
+        data._id = this._id
+        await this.editMethod(data)
+      }
+      this.$refs.goodsTypeDialog.hidden()
+      this.getList()
     }
   }
 }

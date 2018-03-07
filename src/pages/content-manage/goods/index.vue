@@ -11,39 +11,74 @@
       </l-table>
     </div>
 
-    <opt-dialog ref="goodsDialog"
+    <l-opt-dialog ref="goodsDialog"
       :type="type"
       :values="values"
       :fields="dialogFields"
       @commit="commit">
-    </opt-dialog>
+    </l-opt-dialog>
   </div>
 </template>
 
 <script>
-import { createFields } from '@/utils/fields'
-import { getGoodsList, deleteGoods, updateGoods, addGoods } from '@/api'
-import { getFields } from '@/utils/goods-fields'
+import { getGoodsList, deleteGoods, updateGoods, addGoods, getGoodsTypeList } from '@/api'
+import { obj2map } from '@/utils/common'
 import LTable from 'components/tables'
-import optDialog from 'components/dialogs/opt'
+import LOptDialog from 'components/dialogs/opt'
 export default {
   components: {
     LTable,
-    optDialog
+    LOptDialog
   },
   data () {
     return {
       list: [],
       fields: [
-        ...createFields(['title', 'desc', 'price']),
         {
+          prop: 'title',
+          label: '标题',
+          type: 'input'
+        }, {
+          prop: 'desc',
+          label: '描述',
+          type: 'textarea'
+        }, {
+          prop: 'price',
+          label: '价格',
+          type: 'input'
+        }, {
           prop: 'types',
           label: '类型',
           width: '200',
-          slot: true
+          type: 'select'
         }
       ],
-      dialogFields: getFields(['title', 'desc', 'types', 'price']),
+      dialogFields: obj2map({
+        title: {
+          label: '标题',
+          type: 'input',
+          rule: {}
+        },
+        desc: {
+          label: '描述',
+          type: 'textarea',
+          rule: {}
+        },
+        types: {
+          label: '类型',
+          type: 'select',
+          multiple: true,
+          method: getGoodsTypeList
+        },
+        price: {
+          label: '价格',
+          type: 'input-number',
+          rule: {},
+          style: {
+            width: '200px'
+          }
+        }
+      }),
       values: {},
       type: 'add',
       _id: 0,
@@ -88,7 +123,6 @@ export default {
     toEditGoods (item) {
       console.log(item)
       this.values = item
-      // this.values.typeLabels = this.values.typeLabels.split(',')
       console.log('toEdit: ', this.values)
       this.type = 'edit'
       this._id = item._id

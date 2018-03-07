@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="l-forms">
-    <el-form ref="form" :model="formDatas" label-width="80px" class="form">
+    <el-form ref="form" :model="formDatas" label-width="100px" class="form">
       <el-form-item
         v-for="(item, index) of getFieldsValues"
         :key="index"
@@ -32,11 +32,9 @@
           v-if="isType(item.type, 'select')"
           class="form-slelct"
           value-key="label"
-          filterable
           :multiple="item.multiple"
           :loading="!item.loaded"
-          @visible-change="selectVisible($event, item, getFieldsKeys[index])"
-          @change="changeSelect">
+          @visible-change="selectVisible($event, item, getFieldsKeys[index])">
           <el-option
             v-for="(optionItem, index) in item.options"
             :key="optionItem.label"
@@ -199,7 +197,7 @@ export default {
 
     },
     // select focus的时候去请求options
-    selectVisible: async function (visible, item, key) {
+    selectVisible: function (visible, item, key) {
       if (visible) this.getOptions(item, key)
     },
     getOptions: async function (item, key) {
@@ -219,9 +217,6 @@ export default {
         item.loaded = true
         this.$forceUpdate()
       } catch (err) {}
-    },
-    changeSelect: function (event) {
-      console.log('changeSelect', this.formDatas)
     }
   }
 }
